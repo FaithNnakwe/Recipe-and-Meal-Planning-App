@@ -357,63 +357,96 @@ Recipe(
     }
 
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
-      appBar: AppBar(
-        title: Text('Recipe Finder'), backgroundColor: Colors.transparent, elevation: 0
+  backgroundColor: Colors.lightBlueAccent,
+  appBar: AppBar(
+    title: Text('Recipe Finder'),
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+  ),
+  body: Column(
+    children: [
+      Padding(
+        padding: EdgeInsets.all(8.0),
+        child: DropdownButton<String>(
+          value: selectedFilter,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedFilter = newValue!;
+            });
+          },
+          items: filters.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: DropdownButton<String>(
-              value: selectedFilter,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedFilter = newValue!;
-                });
-              },
-              items: filters.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-          Expanded(
-             child: ListView.builder(
-              shrinkWrap: true, // Make the ListView as small as necessary
-              itemCount: filteredRecipes.length,
-              itemBuilder: (context, index) {
-                final recipe = filteredRecipes[index];
-                return ListTile(
-                  tileColor: Colors.white,
-                  contentPadding: EdgeInsets.all(8),
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                   recipe.imageUrl,
-                 width:50,
-                 height:50,
-                fit: BoxFit.cover,
-              ),
-            ),
-                  title: Text(recipe.name),
-                  subtitle: Text('${recipe.ingredients.length} Ingredients'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RecipeDetail(recipe: recipe),
+      Expanded(
+        child: ListView.builder(
+          itemCount: (filteredRecipes.length / 3).ceil(), // Number of rows
+          itemBuilder: (context, rowIndex) {
+            int startIndex = rowIndex * 3;
+            int endIndex = (startIndex + 3).clamp(0, filteredRecipes.length);
+            List recipesInRow = filteredRecipes.sublist(startIndex, endIndex);
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SizedBox(
+                height: 200, // Height for each row
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: recipesInRow.length,
+                  itemBuilder: (context, index) {
+                    final recipe = recipesInRow[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RecipeDetail(recipe: recipe),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                recipe.imageUrl,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              recipe.name,
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${recipe.ingredients.length} Ingredients',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
-    );
+    ],
+  ),
+);
   }
 }
