@@ -32,6 +32,10 @@ class _RecipeListState extends State<RecipeList> {
   List<String> filters = ['All', 'Vegan', 'Gluten-Free', 'Vegetarian'];
   String selectedFilter = 'All';
 
+  // Search functionality
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
     var filteredRecipes = recipes;
@@ -46,6 +50,12 @@ if (selectedFilter == 'Vegan') {
     filteredRecipes = recipes.where((recipe) => recipe.isVegetarian).toList();
   }
 
+  // Apply search filter by recipe name
+    if (searchQuery.isNotEmpty) {
+      filteredRecipes = filteredRecipes.where((recipe) =>
+          recipe.name.toLowerCase().contains(searchQuery.toLowerCase())).toList();
+    }
+
 
     return Scaffold(
   backgroundColor: Color(0xFFD0E1F9),
@@ -53,7 +63,31 @@ if (selectedFilter == 'Vegan') {
     title: Text('Recipe Finder'),
     backgroundColor: Colors.transparent,
     elevation: 0,
-  ),
+     bottom: PreferredSize(
+          preferredSize: Size.fromHeight(56.0),
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Search for recipes...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              onChanged: (query) {
+                setState(() {
+                  searchQuery = query;
+                });
+              },
+            ),
+          ),
+        ),
+      ),
   body: Column(
     children: [
       Padding(
