@@ -9,8 +9,8 @@ class RecipeDetail extends StatelessWidget {
   @override
  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple,
-      appBar: AppBar(title: Text(recipe.name, style: TextStyle(color: Colors.black),), backgroundColor: Colors.lightBlueAccent,),
+      backgroundColor: Color(0xFFF9D6E1) ,
+      appBar: AppBar(title: Text(recipe.name, style: TextStyle(color: Colors.black),), backgroundColor: Color(0xFFD0E1F9),),
       body: SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(16.0),

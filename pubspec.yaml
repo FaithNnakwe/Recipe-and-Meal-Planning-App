@@ -71,6 +71,9 @@ flutter:
      - assets/vegetable_stir_fry.jpeg
      - assets/vegetarian_chili.jpeg
      - assets/vegetarian_tacos.jpeg
+     - assets/apple_cinnamon_oatmeal.jpeg
+     - assets/mango_chia_pudding.jpeg
+     - assets/overnight_oats.jpeg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

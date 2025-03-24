@@ -33,7 +33,7 @@ class _RecipeListState extends State<RecipeList> {
   imageUrl: 'assets/vegetable_stir_fry.jpeg',
   isVegan: true,
   isGlutenFree: true,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '1 Bell pepper (sliced)',
     '1 head of Broccoli (cut into florets)',
@@ -63,7 +63,7 @@ Recipe(
   imageUrl: 'assets/grilled_salmon.jpeg',
   isVegan: false,
   isGlutenFree: true,
-  isVegeterian: false,
+  isVegetarian: false,
   ingredients: [
     '2 Salmon fillets',
     '1 Lemon (cut into wedges)',
@@ -89,7 +89,7 @@ Recipe(
   imageUrl: 'assets/pasta_primavera.jpeg',
   isVegan: true,
   isGlutenFree: false,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '8 oz Pasta (spaghetti, penne, or gluten-free pasta)',
     '1 Cup Cherry tomatoes (halved)',
@@ -119,7 +119,7 @@ Recipe(
   imageUrl: 'assets/beef_tacos.jpeg',
   isVegan: false,
   isGlutenFree: false,
-  isVegeterian: false,
+  isVegetarian: false,
   ingredients: [
     '1 lb Ground beef',
     '1 Packet Taco seasoning mix',
@@ -149,7 +149,7 @@ Recipe(
   imageUrl: 'assets/avocado_toast.jpeg',
   isVegan: true,
   isGlutenFree: false,
-  isVegeterian: false,
+  isVegetarian: false,
   ingredients: [
     '2 slices of Bread (whole grain, gluten-free, or your choice)',
     '1 ripe Avocado',
@@ -174,7 +174,7 @@ Recipe(
   imageUrl: 'assets/chicken_salad.jpeg',
   isVegan: false,
   isGlutenFree: true,
-  isVegeterian: false,
+  isVegetarian: false,
   ingredients: [
     '2 Chicken breasts (boneless, skinless)',
     '1 head of Lettuce (chopped)',
@@ -199,7 +199,7 @@ Recipe(
   imageUrl: 'assets/vegetarian_chili.jpeg',
   isVegan: true,
   isGlutenFree: true,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '1 tbsp Olive oil',
     '1 Onion (diced)',
@@ -231,7 +231,7 @@ Recipe(
   imageUrl: 'assets/spinach_ricotta_stuffed_shells.jpeg',
   isVegan: false,
   isGlutenFree: false,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '1 package Jumbo pasta shells (about 20 shells)',
     '2 cups Ricotta cheese',
@@ -261,7 +261,7 @@ Recipe(
   imageUrl: 'assets/vegetarian_tacos.jpeg',
   isVegan: true,
   isGlutenFree: false,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '1 can Black beans (15 oz, drained and rinsed)',
     '1 Red bell pepper (diced)',
@@ -292,7 +292,7 @@ Recipe(
   imageUrl: 'assets/caprese_salad.jpeg',
   isVegan: false,
   isGlutenFree: true,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '2 large Tomatoes (sliced)',
     '1 ball Fresh mozzarella cheese (sliced)',
@@ -310,12 +310,36 @@ Recipe(
   ],
 ),
 
+Recipe( 
+  name: 'Apple Cinnamon Oatmeal', 
+  imageUrl: 'assets/apple_cinnamon_oatmeal.jpeg', 
+  isVegan: true, 
+  isGlutenFree: false, 
+  isVegetarian: true, 
+  ingredients: [ 
+    '1 cup Rolled oats', 
+    '2 cups Almond milk', 
+    '1 Apple (peeled, cored, and chopped)', 
+    '1/2 tsp Cinnamon', 
+    '1 tbsp Maple syrup', 
+    '1/4 cup Walnuts (optional, for topping)', 
+    '1 tbsp Raisins (optional, for topping)' ], 
+    steps: [ 
+      '1. In a saucepan, combine the rolled oats and almond milk. Bring to a simmer over medium heat.', 
+      '2. Stir occasionally and cook for about 5-7 minutes, until the oats are tender and the mixture thickens.', 
+      '3. In a separate pan, sauté the chopped apple with cinnamon until softened, about 3-4 minutes.', 
+      '4. Once the oats are cooked, mix in the sautéed apples and maple syrup.', 
+      '5. Serve with walnuts and raisins on top for extra crunch and sweetness.' ], 
+      ),
+
+
+
 Recipe(
   name: 'Sweet Potato and Black Bean Enchiladas',
   imageUrl: 'assets/sweet_potato_black_bean_enchiladas.jpeg',
   isVegan: true,
   isGlutenFree: true,
-  isVegeterian: true,
+  isVegetarian: true,
   ingredients: [
     '2 medium Sweet potatoes (peeled and cubed)',
     '1 can Black beans (15 oz, drained and rinsed)',
@@ -338,9 +362,54 @@ Recipe(
     '8. Garnish with fresh cilantro and diced red onion, and serve!'
   ],
 ),
+Recipe( name: 'Mango Chia Pudding', 
+  imageUrl: 'assets/mango_chia_pudding.jpeg', 
+  isVegan: true, 
+  isGlutenFree: true, 
+  isVegetarian: true, 
+  ingredients: [ 
+    '1 cup Coconut milk', 
+    '1/2 cup Chia seeds', 
+    '1 tbsp Maple syrup', 
+    '1/2 tsp Vanilla extract', 
+    '1 Mango (peeled and diced)', 
+    '1/4 cup Shredded coconut (optional, for garnish)', 
+    'Fresh mint (optional, for garnish)' ], 
+    steps: [ 
+      '1. In a bowl, mix the coconut milk, chia seeds, maple syrup, and vanilla extract.', 
+      '2. Stir well to combine and let it sit for 5 minutes. Stir again to prevent clumps.', 
+      '3. Cover and refrigerate the chia pudding for at least 4 hours, or overnight.', 
+      '4. When ready to serve, top with fresh mango, shredded coconut, and mint leaves.', 
+      '5. Enjoy your healthy, refreshing breakfast!' ], 
+      ),
+
+Recipe( 
+  name: 'Overnight Oats', 
+  imageUrl: 'assets/overnight_oats.jpeg', 
+  isVegan: true, 
+  isGlutenFree: true, 
+  isVegetarian: true, 
+  ingredients: [ 
+    '1/2 cup Rolled oats', 
+    '1/2 cup Almond milk', 
+    '1/4 cup Greek yogurt (or non-dairy yogurt for vegan)', 
+    '1 tbsp Chia seeds', 
+    '1 tbsp Maple syrup', 
+    '1/2 tsp Vanilla extract', 
+    '1/4 cup Mixed berries (optional)', 
+    '1 tbsp Almond butter', 
+    '1/4 cup Sliced almonds (optional, for topping)' ], 
+    steps: [ 
+      '1. In a jar or container, combine the rolled oats, almond milk, Greek yogurt, chia seeds, maple syrup, and vanilla extract.', 
+      '2. Stir everything together until well mixed.', 
+      '3. Cover the container with a lid or plastic wrap and refrigerate overnight (or for at least 4 hours).', 
+      '4. In the morning, give the oats a good stir, and top with mixed berries, almond butter, and sliced almonds.', 
+      '5. Enjoy a quick, healthy breakfast!' ], 
+      ),
+  
   ];
 
-  List<String> filters = ['All', 'Vegan', 'Gluten-Free', 'Vegeterian'];
+  List<String> filters = ['All', 'Vegan', 'Gluten-Free', 'Vegetarian'];
   String selectedFilter = 'All';
 
   @override
@@ -348,16 +417,18 @@ Recipe(
     var filteredRecipes = recipes;
 
     // Filter recipes based on selected filter
-    if (selectedFilter == 'Vegan') {
-      filteredRecipes = recipes.where((recipe) => recipe.isVegan).toList();
-    } else if (selectedFilter == 'Gluten-Free') {
-      filteredRecipes = recipes.where((recipe) => recipe.isGlutenFree).toList();
-    } else if (selectedFilter == 'Vegeterian') {
-      filteredRecipes = recipes.where((recipe) => recipe.isVegeterian).toList();
-    }
+    // Apply multiple filters
+if (selectedFilter == 'Vegan') {
+    filteredRecipes = recipes.where((recipe) => recipe.isVegan).toList();
+  } else if (selectedFilter == 'Gluten-Free') {
+    filteredRecipes = recipes.where((recipe) => recipe.isGlutenFree).toList();
+  } else if (selectedFilter == 'Vegetarian') {
+    filteredRecipes = recipes.where((recipe) => recipe.isVegetarian).toList();
+  }
+
 
     return Scaffold(
-  backgroundColor: Colors.lightBlueAccent,
+  backgroundColor: Color(0xFFD0E1F9),
   appBar: AppBar(
     title: Text('Recipe Finder'),
     backgroundColor: Colors.transparent,
@@ -367,78 +438,81 @@ Recipe(
     children: [
       Padding(
         padding: EdgeInsets.all(8.0),
-        child: DropdownButton<String>(
-          value: selectedFilter,
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedFilter = newValue!;
-            });
-          },
-          items: filters.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
+        child: Wrap(
+          spacing: 8.0,
+          children: filters.map((String filter) {
+            return FilterChip(
+              label: Text(filter,),
+              selected: selectedFilter == filter,
+              onSelected: (bool selected) {
+                setState(() {
+                    selectedFilter = selected ? filter : 'All'; // Update selected filter
+                  });
+              },
+              selectedColor: Colors.blueAccent,
+              backgroundColor: Color(0xFFF5E6C4),
+              labelStyle: TextStyle(
+                color: selectedFilter == filter ? Colors.white : Colors.black,
+              ),
             );
           }).toList(),
         ),
       ),
       Expanded(
-        child: ListView.builder(
-          itemCount: (filteredRecipes.length / 3).ceil(), // Number of rows
-          itemBuilder: (context, rowIndex) {
-            int startIndex = rowIndex * 3;
-            int endIndex = (startIndex + 3).clamp(0, filteredRecipes.length);
-            List recipesInRow = filteredRecipes.sublist(startIndex, endIndex);
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(
-                height: 200, // Height for each row
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: recipesInRow.length,
-                  itemBuilder: (context, index) {
-                    final recipe = recipesInRow[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RecipeDetail(recipe: recipe),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
-                                recipe.imageUrl,
-                                width: 120,
-                                height: 120,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              recipe.name,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${recipe.ingredients.length} Ingredients',
-                              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+        child: GridView.builder(
+          padding: EdgeInsets.all(8.0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // Number of columns
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.7, // Adjust height of grid items
+          ),
+          itemCount: filteredRecipes.length,
+          itemBuilder: (context, index) {
+            final recipe = filteredRecipes[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecipeDetail(recipe: recipe),
+                  ),
+                );
+              },
+              child: Card(
+                color: Color(0xFFF9D6E1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          recipe.imageUrl,
+                          width: 60,
+                          height: 50,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    );
-                  },
+                      const SizedBox(height: 3),
+                       Text(
+                        recipe.name,
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        ),
+                      Text(
+                        '${recipe.ingredients.length} Ingredients',
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 7)
+                    ],
+                  ),
                 ),
               ),
             );
