@@ -55,9 +55,6 @@ class _RecipeListState extends State<RecipeList> {
     return Scaffold(
       backgroundColor: Color(0xFFD0E1F9),
       appBar: AppBar(
-        title: Text('Recipe Finder'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56.0),
           child: Padding(
