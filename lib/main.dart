@@ -133,7 +133,7 @@ class _RecipeListState extends State<RecipeList> {
                 crossAxisCount: 3,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.7,
+                childAspectRatio: 0.6,
               ),
               itemCount: displayedRecipes < filteredRecipes.length ? displayedRecipes : filteredRecipes.length,
               itemBuilder: (context, index) {
@@ -167,7 +167,7 @@ class _RecipeListState extends State<RecipeList> {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 5),
                           Text(
                             recipe.name,
                             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
@@ -176,6 +176,11 @@ class _RecipeListState extends State<RecipeList> {
                           Text(
                             '${recipe.ingredients.length} Ingredients',
                             style: TextStyle(fontSize: 14, color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            recipe.category,
+                            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 7)
