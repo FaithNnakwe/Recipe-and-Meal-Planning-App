@@ -6,7 +6,6 @@ class Recipe {
   String imageUrl;
   List<String> ingredients;
   List<String> steps;
-  final String category; 
 
   Recipe({
     required this.name,
@@ -16,7 +15,6 @@ class Recipe {
     required this.imageUrl,
     required this.ingredients,
     required this.steps,
-    required this.category,
   });
 }
 List<Recipe> recipes = [
@@ -48,7 +46,6 @@ List<Recipe> recipes = [
     '6. Serve the stir-fry over cooked rice or noodles and garnish with sesame seeds, if desired.',
     '7. Enjoy your delicious, healthy vegetable stir-fry!'
   ],
-  category: 'Lunch',
 ),
 
 Recipe(
@@ -75,7 +72,6 @@ Recipe(
     '6. Garnish with fresh dill and serve with your favorite sides, like roasted vegetables or a simple salad.',
     '7. Enjoy your perfectly grilled salmon!'
   ],
-  category: 'Lunch',
 ),
 
 Recipe(
@@ -106,7 +102,6 @@ Recipe(
     '7. Stir in fresh basil and mix everything together.',
     '8. Serve with a sprinkle of nutritional yeast or vegan cheese if desired, and enjoy your light and fresh pasta primavera!'
   ],
-  category: 'Lunch',
 ),
 
 Recipe(
@@ -137,7 +132,6 @@ Recipe(
     '7. Optionally, add chopped onions for extra flavor.',
     '8. Serve with your favorite sides, like guacamole or Mexican rice, and enjoy your beef tacos!'
   ],
-  category: 'Lunch',
 ),
 
 Recipe(
@@ -164,7 +158,6 @@ Recipe(
     '6. Optionally, top with sliced tomatoes, a poached egg, or microgreens for added flavor and texture.',
     '7. Serve immediately and enjoy a delicious, healthy avocado toast!'
   ],
-  category: 'Breakfast',
 ),
     Recipe(
   name: 'Chicken Salad',
@@ -190,7 +183,6 @@ Recipe(
     '5. Dress the salad: Drizzle the salad dressing of your choice over the top. Toss everything together gently to coat the salad evenly with the dressing.',
     '6. Serve and enjoy: Serve the chicken salad immediately, or chill it in the fridge for 10-15 minutes before serving for a refreshing dish.',
   ],
-  category: 'Lunch',
 ),
 Recipe(
   name: 'Vegetarian Chili',
@@ -222,7 +214,6 @@ Recipe(
     '6. Taste and adjust the seasoning as needed.',
     '7. Serve with a sprinkle of fresh cilantro, and enjoy your hearty vegetarian chili!'
   ],
-  category: 'Lunch'
 ),
 
 Recipe(
@@ -253,7 +244,6 @@ Recipe(
     '6. Bake for 25-30 minutes, removing the foil during the last 5 minutes to allow the cheese to brown and bubble.',
     '7. Garnish with fresh basil and serve warm.'
   ],
-  category: 'Lunch',
 ),
 
 Recipe(
@@ -285,7 +275,6 @@ Recipe(
     '5. To assemble the tacos, spoon the bean mixture into each tortilla, and top with sliced avocado and fresh salsa.',
     '6. Garnish with cilantro and serve with lime wedges for an extra burst of flavor.'
   ],
-  category: 'Lunch',
 ),
 
 Recipe(
@@ -309,7 +298,6 @@ Recipe(
     '4. Season with salt and pepper to taste.',
     '5. Serve immediately as a light, refreshing appetizer or side dish.'
   ],
-  category: 'Lunch',
 ),
 
 Recipe( 
@@ -332,7 +320,6 @@ Recipe(
       '3. In a separate pan, sauté the chopped apple with cinnamon until softened, about 3-4 minutes.', 
       '4. Once the oats are cooked, mix in the sautéed apples and maple syrup.', 
       '5. Serve with walnuts and raisins on top for extra crunch and sweetness.' ], 
-      category: 'Breakfast',
       ),
 
 
@@ -364,7 +351,6 @@ Recipe(
     '7. Cover with aluminum foil and bake for 20 minutes.',
     '8. Garnish with fresh cilantro and diced red onion, and serve!'
   ],
-  category: 'Lunch',
 ),
 Recipe( name: 'Mango Chia Pudding', 
   imageUrl: 'assets/mango_chia_pudding.jpeg', 
@@ -385,7 +371,6 @@ Recipe( name: 'Mango Chia Pudding',
       '3. Cover and refrigerate the chia pudding for at least 4 hours, or overnight.', 
       '4. When ready to serve, top with fresh mango, shredded coconut, and mint leaves.', 
       '5. Enjoy your healthy, refreshing breakfast!' ], 
-      category: 'Breakfast',
       ),
 
 Recipe( 
@@ -410,7 +395,6 @@ Recipe(
       '3. Cover the container with a lid or plastic wrap and refrigerate overnight (or for at least 4 hours).', 
       '4. In the morning, give the oats a good stir, and top with mixed berries, almond butter, and sliced almonds.', 
       '5. Enjoy a quick, healthy breakfast!' ], 
-      category: 'Breakfast',
       ),
   
 ];

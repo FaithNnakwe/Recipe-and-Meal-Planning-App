@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'recipe.dart';
 import 'detail.dart';
+import 'meal_plan.dart';
 
 void main() {
   runApp(RecipeApp());
@@ -27,6 +28,7 @@ class RecipeList extends StatefulWidget {
 
 class _RecipeListState extends State<RecipeList> {
   List<Recipe> myRecipes = recipes;
+  MealPlan mealPlan = MealPlan();
   List<String> filters = ['Vegan', 'Gluten-Free', 'Vegetarian'];
   Set<String> selectedFilters = {'Vegan', 'Gluten-Free', 'Vegetarian'};
 
@@ -54,7 +56,21 @@ class _RecipeListState extends State<RecipeList> {
       backgroundColor: Color(0xFFD0E1F9),
       appBar: AppBar(
         title: Text('Recipe Finder'),
-        backgroundColor: Colors.transparent,
+        actions: [
+  TextButton(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MealPlanScreen(mealPlan: mealPlan)),
+      );
+    },
+    child: Text(
+      'View Meal Plan',
+      style: TextStyle(color: Colors.black),  // Adjust color as needed
+    ),
+  ),
+],
+        backgroundColor: Color(0xFFF9D6E1),
         elevation: 0,
       ),
       body: Column(
@@ -133,7 +149,7 @@ class _RecipeListState extends State<RecipeList> {
                 crossAxisCount: 3,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.6,
+                childAspectRatio: 0.7,
               ),
               itemCount: displayedRecipes < filteredRecipes.length ? displayedRecipes : filteredRecipes.length,
               itemBuilder: (context, index) {
@@ -143,7 +159,7 @@ class _RecipeListState extends State<RecipeList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RecipeDetail(recipe: recipe),
+                        builder: (context) => RecipeDetail(recipe: recipe, mealPlan: mealPlan),
                       ),
                     );
                   },
@@ -176,11 +192,6 @@ class _RecipeListState extends State<RecipeList> {
                           Text(
                             '${recipe.ingredients.length} Ingredients',
                             style: TextStyle(fontSize: 14, color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            recipe.category,
-                            style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 7)
