@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:meal_planning_app/favorites.dart';
 import 'package:provider/provider.dart';
 
+import 'dbhelper.dart';
 import 'login.dart';
 import 'recipelist.dart';
 import 'user_provider.dart';
+
+final dbHelper = DatabaseHelper();
 
 void main() {
   runApp(
@@ -86,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen>
                 // Navigate to the Login screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Login()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
               child: Padding(
@@ -100,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen>
             Column(
               children: [
                 Text('Recipe Finder'),
-                // Looks ugly, but It's taking too long to mess with so it's done for now
+                // TODO: Added Profile Screen with Favorites
                 user.isLoggedIn
                     ? Text(
                       'Welcome, ${user.username}!',
@@ -118,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           RecipeList(),
           Center(child: Text('Meal Plans Placeholder')),
-          Center(child: Text('Favorites Placeholder')),
+          Favorites(),
         ],
       ),
       bottomNavigationBar: Container(

@@ -111,8 +111,7 @@ class _RecipeListState extends State<RecipeList> {
             ),
             GridView.builder(
               shrinkWrap: true,
-              physics:
-                  NeverScrollableScrollPhysics(), // Prevents nested scrolling
+              physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.all(8.0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
