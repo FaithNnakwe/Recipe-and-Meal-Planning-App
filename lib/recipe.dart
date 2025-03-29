@@ -197,7 +197,7 @@ Recipe(
   ingredients: [
     'Olive oil',
     'Onions',
-    'Garlic clove',
+    'Garlic cloves',
     'Bell pepper',
     'Zucchini',
     'Tomatoes',

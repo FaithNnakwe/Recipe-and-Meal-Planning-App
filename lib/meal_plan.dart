@@ -89,8 +89,11 @@ class MealPlanScreenState extends State<MealPlanScreen> {
           ElevatedButton(
               onPressed: clearMealPlan,
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                backgroundColor: Color.fromARGB(255, 200, 242, 236), // Button color
+                shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Rounded corners
+    ),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                backgroundColor: Color(0xFFA8E6CF), // Button color
               ),
               child: Text("Refresh Meal Plan", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
             ),
@@ -100,7 +103,7 @@ class MealPlanScreenState extends State<MealPlanScreen> {
         children: [
           // Meal plan list
           Expanded(
-            flex: 2,  // Give more space to the meal plan
+            flex: 6,
             child: ListView(
               children: widget.mealPlan.meals.keys.map((day) {
                 return Card(
@@ -166,35 +169,78 @@ class MealPlanScreenState extends State<MealPlanScreen> {
             ),
           ),
 
-          // **Grocery List Section**
           Expanded(
-            flex: 1,  // Give the grocery list less space than the meal plan
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+  child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16),
+        ElevatedButton(
+  onPressed: () {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allows full-screen height
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6, // Start at 60% height
+          minChildSize: 0.2, // Can collapse down to 20%
+          maxChildSize: 1.0, // Fully covers the screen when expanded
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFE8E8E8),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Grocery List",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  // Drag Handle
+                  Container(
+                    width: 40,
+                    height: 6,
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
-                  Divider(),
-                  updatedGroceryList.isEmpty
-                      ? Center(child: Text("Your grocery list is empty!"))
-                      : SingleChildScrollView(  // Added scroll view for grocery list
-                          child: Column(
-                            children: updatedGroceryList.map((item) {
-                              return ListTile(
-                                leading: Icon(Icons.check_box_outline_blank),
-                                title: Text(item),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: updatedGroceryList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Icon(Icons.check_box_outline_blank),
+                          title: Text(updatedGroceryList[index]),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ),
+            );
+          },
+        );
+      },
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFFB3D9FF), // Background color (e.g., blue)
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Rounded corners
+    ),
+    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0), // Padding inside the button
+  ),
+  child: Text("View Grocery List", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+),
+      ],
+    ),
+  ),
+),
         ],
       ),
     );

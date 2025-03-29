@@ -212,8 +212,14 @@ class _RecipeListState extends State<RecipeList> {
                     displayedRecipes += 6;
                   });
                 },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-                child: Text('Load More', style: TextStyle(color: Colors.white),),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFB3D9FF), // Background color (e.g., blue)
+                  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Rounded corners
+    ),
+    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                ),
+                child: Text('Load More', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
               ),
             ),
         ],
