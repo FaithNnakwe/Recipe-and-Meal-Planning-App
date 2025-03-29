@@ -28,50 +28,70 @@ class _RecipeDetailState extends State<RecipeDetail> {
 
   // Function to show the dialog for adding to meal plan
   void showMealDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Add to Meal Plan"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Dropdown for selecting day of the week
-              DropdownButton<String>(
-                value: selectedDay,
-                items: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-                    .map((day) => DropdownMenuItem(value: day, child: Text(day)))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedDay = value!;
-                  });
-                },
+  showDialog(
+    context: context,
+    builder: (context) {
+      String tempSelectedDay = selectedDay; // Local copy of selectedDay
+      String tempSelectedMeal = selectedMeal; // Local copy of selectedMeal
+
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text("Add to Meal Plan"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Dropdown for selecting day of the week
+                DropdownButton<String>(
+                  value: tempSelectedDay,
+                  items: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                      .map((day) => DropdownMenuItem(value: day, child: Text(day)))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      tempSelectedDay = value!;
+                    });
+                  },
+                ),
+                // Dropdown for selecting meal type
+                DropdownButton<String>(
+                  value: tempSelectedMeal,
+                  items: ["Breakfast", "Lunch", "Dinner"]
+                      .map((meal) => DropdownMenuItem(value: meal, child: Text(meal)))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      tempSelectedMeal = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              // Cancel action
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel"),
               ),
-              // Dropdown for selecting meal type
-              DropdownButton<String>(
-                value: selectedMeal,
-                items: ["Breakfast", "Lunch", "Dinner"]
-                    .map((meal) => DropdownMenuItem(value: meal, child: Text(meal)))
-                    .toList(),
-                onChanged: (value) {
+              // Add action
+              ElevatedButton(
+                onPressed: () {
+                  // Update the main state variables before closing the dialog
                   setState(() {
-                    selectedMeal = value!;
+                    selectedDay = tempSelectedDay;
+                    selectedMeal = tempSelectedMeal;
                   });
+                  addToMealPlan();
                 },
+                child: Text("Add"),
               ),
             ],
-          ),
-          actions: [
-            // Cancel action
-            TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-            // Add action
-            ElevatedButton(onPressed: addToMealPlan, child: Text("Add")),
-          ],
-        );
-      },
-    );
-  }
+          );
+        },
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
