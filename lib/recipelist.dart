@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'detail.dart';
 import 'login.dart';
+import 'meal_plan.dart';
 import 'recipe.dart';
 import 'user_provider.dart';
 
@@ -15,10 +16,12 @@ class RecipeList extends StatefulWidget {
 
 class _RecipeListState extends State<RecipeList> {
   List<Recipe> myRecipes = recipes;
-  List<String> filters = ['All', 'Vegan', 'Gluten-Free', 'Vegetarian'];
-  String selectedFilter = 'All';
+  MealPlan mealPlan = MealPlan();
+  List<String> filters = ['Vegan', 'Gluten-Free', 'Vegetarian'];
+  Set<String> selectedFilters = {'Vegan', 'Gluten-Free', 'Vegetarian'};
   TextEditingController searchController = TextEditingController();
   String searchQuery = '';
+  int displayedRecipes = 6; // Initial number of recipes displayed
 
   @override
   void dispose() {
@@ -32,31 +35,21 @@ class _RecipeListState extends State<RecipeList> {
 
     var filteredRecipes =
         recipes.where((recipe) {
-          if (selectedFilter != 'All') {
-            switch (selectedFilter) {
-              case 'Vegan':
-                return recipe.isVegan;
-              case 'Gluten-Free':
-                return recipe.isGlutenFree;
-              case 'Vegetarian':
-                return recipe.isVegetarian;
-              default:
-                return true;
-            }
-          }
-          return true;
-        }).toList();
+          bool matchesFilters =
+              selectedFilters.isEmpty ||
+              (selectedFilters.contains('Vegan') && recipe.isVegan) ||
+              (selectedFilters.contains('Gluten-Free') &&
+                  recipe.isGlutenFree) ||
+              (selectedFilters.contains('Vegetarian') && recipe.isVegetarian);
 
-    if (searchQuery.isNotEmpty) {
-      filteredRecipes =
-          filteredRecipes
-              .where(
-                (recipe) => recipe.name.toLowerCase().contains(
-                  searchQuery.toLowerCase(),
-                ),
-              )
-              .toList();
-    }
+          String query = searchQuery.toLowerCase();
+          bool matchesName = recipe.name.toLowerCase().contains(query);
+          bool matchesIngredient = recipe.ingredients.any(
+            (ingredient) => ingredient.toLowerCase().contains(query),
+          );
+
+          return matchesFilters && (matchesName || matchesIngredient);
+        }).toList();
 
     return Scaffold(
       backgroundColor: Color(0xFFD0E1F9),
@@ -90,29 +83,58 @@ class _RecipeListState extends State<RecipeList> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children:
-                    filters.map((String filter) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.0),
-                        child: FilterChip(
-                          label: Text(filter),
-                          selected: selectedFilter == filter,
-                          onSelected: (bool selected) {
-                            setState(
-                              () => selectedFilter = selected ? filter : 'All',
-                            );
-                          },
-                          selectedColor: Colors.blueAccent,
-                          backgroundColor: Color(0xFFF5E6C4),
-                          labelStyle: TextStyle(
-                            color:
-                                selectedFilter == filter
-                                    ? Colors.white
-                                    : Colors.black,
-                          ),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.0),
+                    child: FilterChip(
+                      label: Text('Clear All'),
+                      selected: selectedFilters.isEmpty,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          if (selectedFilters.isNotEmpty) {
+                            selectedFilters.clear();
+                          } else {
+                            selectedFilters.addAll(filters);
+                          }
+                        });
+                      },
+                      selectedColor: Colors.redAccent,
+                      backgroundColor: Color(0xFFF5E6C4),
+                      labelStyle: TextStyle(
+                        color:
+                            selectedFilters.isEmpty
+                                ? Colors.white
+                                : Colors.black,
+                      ),
+                    ),
+                  ),
+                  ...filters.map((String filter) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.0),
+                      child: FilterChip(
+                        label: Text(filter),
+                        selected: selectedFilters.contains(filter),
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (selected) {
+                              selectedFilters.add(filter);
+                            } else {
+                              selectedFilters.remove(filter);
+                            }
+                          });
+                        },
+                        selectedColor: Colors.blueAccent,
+                        backgroundColor: Color(0xFFF5E6C4),
+                        labelStyle: TextStyle(
+                          color:
+                              selectedFilters.contains(filter)
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    );
+                  }).toList(),
+                ],
               ),
             ),
           ),
@@ -125,13 +147,42 @@ class _RecipeListState extends State<RecipeList> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              itemCount: filteredRecipes.length,
+              itemCount: displayedRecipes.clamp(0, filteredRecipes.length),
               itemBuilder: (context, index) {
                 final recipe = filteredRecipes[index];
                 return _buildRecipeCard(context, recipe, userProvider);
               },
             ),
           ),
+          if (displayedRecipes < filteredRecipes.length)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    displayedRecipes += 6; // Load 6 more recipes each time
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFB3D9FF),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 12.0,
+                  ),
+                ),
+                child: Text(
+                  'Load More',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -150,7 +201,10 @@ class _RecipeListState extends State<RecipeList> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RecipeDetail(recipe: recipe)),
+          MaterialPageRoute(
+            builder:
+                (context) => RecipeDetail(recipe: recipe, mealPlan: mealPlan),
+          ),
         );
       },
       child: Card(
@@ -188,8 +242,6 @@ class _RecipeListState extends State<RecipeList> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 4),
-
-              // Favorites Button
               if (!userProvider.isLoggedIn)
                 IconButton(
                   icon: Icon(
@@ -204,7 +256,6 @@ class _RecipeListState extends State<RecipeList> {
                         action: SnackBarAction(
                           label: 'Log In',
                           onPressed: () {
-                            // Navigate to the Login screen
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -227,20 +278,8 @@ class _RecipeListState extends State<RecipeList> {
                   onPressed: () async {
                     if (isFavorite) {
                       await userProvider.deleteFavoriteRecipe(recipe.name);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${recipe.name} removed from favorites',
-                          ),
-                        ),
-                      );
                     } else {
                       await userProvider.addFavoriteRecipe(recipe.toMap());
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${recipe.name} added to favorites'),
-                        ),
-                      );
                     }
                   },
                 ),

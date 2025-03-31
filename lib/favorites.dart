@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_planning_app/meal_plan.dart';
 import 'package:provider/provider.dart';
 
 import 'detail.dart';
@@ -61,8 +62,10 @@ class Favorites extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              RecipeDetail(recipe: Recipe.fromMap(recipe)),
+                          (context) => RecipeDetail(
+                            recipe: Recipe.fromMap(recipe),
+                            mealPlan: MealPlan(),
+                          ),
                     ),
                   );
                 },
