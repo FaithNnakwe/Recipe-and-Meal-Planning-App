@@ -19,6 +19,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
   // Function to add recipe to meal plan
   void addToMealPlan() {
     widget.mealPlan.addMeal(selectedDay, selectedMeal, widget.recipe);
+  setState(() {});
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("${widget.recipe.name} added to $selectedMeal on $selectedDay", style: TextStyle(color: Colors.black),),
        backgroundColor: Colors.white),

@@ -142,9 +142,11 @@ class MealPlanScreenState extends State<MealPlanScreen> {
                                       Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                     builder: (context) => RecipeDetail(recipe: recipe, mealPlan: MealPlan(),),
+                                     builder: (context) => RecipeDetail(recipe: recipe, mealPlan: widget.mealPlan),
                                ),
-                              );
+                              ).then((_) {
+  setState(() {});  // Refresh the screen after returning
+});
                                },
                                       trailing: IconButton(
                                         icon: Icon(Icons.delete, color: Colors.red),

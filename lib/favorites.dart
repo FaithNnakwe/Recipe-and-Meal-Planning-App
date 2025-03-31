@@ -13,7 +13,8 @@ class Favorites extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Favorite Recipes")),
+      backgroundColor: Color(0xFFD0E1F9),
+      appBar: AppBar(title: const Text("Favorite Recipes"), backgroundColor: Color(0xFFF9D6E1),),
       body: Consumer<UserProvider>(
         builder: (context, userProvider, child) {
           if (!userProvider.isLoggedIn) {
@@ -23,6 +24,7 @@ class Favorites extends StatelessWidget {
           }
 
           final favoriteRecipes = userProvider.favoriteRecipes;
+
 
           if (favoriteRecipes.isEmpty) {
             return const Center(child: Text("No favorite recipes found."));

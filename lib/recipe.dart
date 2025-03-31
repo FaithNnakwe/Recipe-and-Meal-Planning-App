@@ -39,9 +39,9 @@ class Recipe {
       isVegan: map['isVegan'] == 1, // Convert from 1/0 to bool
       isGlutenFree: map['isGlutenFree'] == 1, // Convert from 1/0 to bool
       isVegetarian: map['isVegetarian'] == 1, // Convert from 1/0 to bool
-      ingredients: List<String>.from(
-        map['ingredients'] ?? [],
-      ), // Convert ingredients to a list of strings, default to empty if null
+      ingredients: map['ingredients'] is List
+    ? List<String>.from(map['ingredients'])
+    : (map['ingredients'] != null ? [map['ingredients'].toString()] : []), // Convert ingredients to a list of strings, default to empty if null
       steps: List<String>.from(map['steps'] ?? []),
     );
   }
