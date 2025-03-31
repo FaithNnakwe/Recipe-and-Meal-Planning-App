@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
-import 'recipe.dart';
-import 'detail.dart';
+import 'package:meal_planning_app/favorites.dart';
+import 'package:provider/provider.dart';
+
+import 'dbhelper.dart';
+import 'login.dart';
 import 'meal_plan.dart';
+import 'recipelist.dart';
+import 'user_provider.dart';
+
+final dbHelper = DatabaseHelper();
 
 void main() {
-  runApp(RecipeApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: RecipeApp(),
+    ),
+  );
 }
 
 class RecipeApp extends StatelessWidget {
+  const RecipeApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,213 +30,118 @@ class RecipeApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RecipeList(),
+      home: DefaultTabController(length: 3, child: HomeScreen()),
     );
   }
 }
 
-class RecipeList extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _RecipeListState createState() => _RecipeListState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _RecipeListState extends State<RecipeList> {
-  List<Recipe> myRecipes = recipes;
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin, RestorationMixin {
+  late TabController _tabController;
+  final RestorableInt tabIndex = RestorableInt(0);
   MealPlan mealPlan = MealPlan();
-  List<String> filters = ['Vegan', 'Gluten-Free', 'Vegetarian'];
-  Set<String> selectedFilters = {'Vegan', 'Gluten-Free', 'Vegetarian'};
 
-  TextEditingController searchController = TextEditingController();
-  String searchQuery = '';
-  int displayedRecipes = 6;
+  @override
+  String get restorationId => 'recipe_tabs';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(tabIndex, 'tab_index');
+    if (_tabController.index != tabIndex.value) {
+      setState(() {
+        _tabController.index = tabIndex.value;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(initialIndex: 0, length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        return; // Prevents unnecessary rebuilds
+      }
+      setState(() {
+        tabIndex.value = _tabController.index;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    tabIndex.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var filteredRecipes = recipes.where((recipe) {
-      bool matchesFilters = selectedFilters.isEmpty || 
-        (selectedFilters.contains('Vegan') && recipe.isVegan) ||
-        (selectedFilters.contains('Gluten-Free') && recipe.isGlutenFree) ||
-        (selectedFilters.contains('Vegetarian') && recipe.isVegetarian);
-      
-      String query = searchQuery.toLowerCase();
-      bool matchesName = recipe.name.toLowerCase().contains(query);
-      bool matchesIngredient = recipe.ingredients.any(
-        (ingredient) => ingredient.toLowerCase().contains(query),
-      );
-      return matchesFilters && (matchesName || matchesIngredient);
-    }).toList();
+    final user = Provider.of<UserProvider>(context);
 
     return Scaffold(
-      backgroundColor: Color(0xFFD0E1F9),
       appBar: AppBar(
-        title: Text('Recipe Finder'),
-        actions: [
-  TextButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MealPlanScreen(mealPlan: mealPlan)),
-      );
-    },
-    child: Text(
-      'View Meal Plan',
-      style: TextStyle(color: Colors.black),  // Adjust color as needed
-    ),
-  ),
-],
-        backgroundColor: Color(0xFFF9D6E1),
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Wrap(
-              spacing: 8.0,
-              children: [
-                FilterChip(
-                  label: Text('Clear All'),
-                  selected: selectedFilters.isEmpty,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      if (selectedFilters.isNotEmpty) {
-                        selectedFilters.clear();
-                      } else {
-                        selectedFilters.addAll(filters);
-                      }
-                    });
-                  },
-                  selectedColor: Colors.redAccent,
-                  backgroundColor: Color(0xFFF5E6C4),
-                  labelStyle: TextStyle(
-                    color: selectedFilters.isEmpty ? Colors.white : Colors.black,
-                  ),
-                ),
-                ...filters.map((String filter) {
-                  return FilterChip(
-                    label: Text(filter),
-                    selected: selectedFilters.contains(filter),
-                    onSelected: (bool selected) {
-                      setState(() {
-                        if (selected) {
-                          selectedFilters.add(filter);
-                        } else {
-                          selectedFilters.remove(filter);
-                        }
-                      });
-                    },
-                    selectedColor: Colors.blueAccent,
-                    backgroundColor: Color(0xFFF5E6C4),
-                    labelStyle: TextStyle(
-                      color: selectedFilters.contains(filter) ? Colors.white : Colors.black,
-                    ),
-                  );
-                }).toList(),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: 'Search by recipe name or ingredient...',
-                prefixIcon: Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
-            ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.all(8.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.7,
-              ),
-              itemCount: displayedRecipes < filteredRecipes.length ? displayedRecipes : filteredRecipes.length,
-              itemBuilder: (context, index) {
-                final recipe = filteredRecipes[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RecipeDetail(recipe: recipe, mealPlan: mealPlan),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    color: Color(0xFFF9D6E1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              recipe.imageUrl,
-                              width: 60,
-                              height: 50,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            recipe.name,
-                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            '${recipe.ingredients.length} Ingredients',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 7)
-                        ],
-                      ),
-                    ),
-                  ),
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                // Navigate to the Login screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
-            ),
-          ),
-          if (displayedRecipes < filteredRecipes.length)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    displayedRecipes += 6;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB3D9FF), // Background color (e.g., blue)
-                  shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8), // Rounded corners
-    ),
-    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: CircleAvatar(
+                  backgroundImage: AssetImage('assets/profile.png'),
+                  radius: 25,
                 ),
-                child: Text('Load More', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
               ),
             ),
+            Column(
+              children: [
+                Text('Recipe Finder'),
+                user.isLoggedIn
+                    ? Text(
+                      'Welcome, ${user.username}!',
+                      style: TextStyle(fontSize: 18, color: Colors.blueGrey),
+                    )
+                    : Text(''),
+              ],
+            ),
+          ],
+        ),
+        elevation: 0,
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          RecipeList(),
+          MealPlanScreen(mealPlan: mealPlan),
+          Favorites(),
         ],
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.blue,
+        child: TabBar(
+          controller: _tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.white,
+          tabs: [
+            Tab(icon: Icon(Icons.restaurant_menu), text: 'Recipes'),
+            Tab(icon: Icon(Icons.calendar_today), text: 'Meal Plans'),
+            Tab(icon: Icon(Icons.favorite), text: 'Favorites'),
+          ],
+        ),
       ),
     );
   }
