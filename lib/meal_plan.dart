@@ -15,6 +15,8 @@ class MealPlan {
 
   void addMeal(String day, String mealType, Recipe recipe) {
     meals[day]?[mealType]?.add(recipe);
+    print("Added ${recipe.name} to $mealType on $day");
+    
   }
 
   // **Generate Grocery List**
@@ -113,6 +115,7 @@ class MealPlanScreenState extends State<MealPlanScreen> {
                     title: Text(day, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     children: ["Breakfast", "Lunch", "Dinner"].map((mealType) {
                       final recipes = widget.mealPlan.meals[day]?[mealType] ?? []; // Get list of recipes
+                      print("Recipes for $day - $mealType: ${recipes.map((r) => r.name).toList()}");
                       Color mealTextColor;
                       if (mealType == "Breakfast") {
                         mealTextColor = Colors.orange; // Example color for Breakfast
@@ -135,6 +138,9 @@ class MealPlanScreenState extends State<MealPlanScreen> {
                                 )
                               : Column(
                                   children: recipes.map((recipe) {
+                                    // itemCount: recipes.length,
+              //itemBuilder: (context, index) {
+                //Recipe recipe = recipes[index];
                                     return ListTile(
                                       title: Text(recipe.name),
                                       leading: Image.asset(recipe.imageUrl, width: 50, height: 50, fit: BoxFit.cover,),
@@ -145,8 +151,8 @@ class MealPlanScreenState extends State<MealPlanScreen> {
                                      builder: (context) => RecipeDetail(recipe: recipe, mealPlan: widget.mealPlan),
                                ),
                               ).then((_) {
-  setState(() {});  // Refresh the screen after returning
-});
+                                 setState(() {});  // Refresh the screen after returning
+                                   });
                                },
                                       trailing: IconButton(
                                         icon: Icon(Icons.delete, color: Colors.red),

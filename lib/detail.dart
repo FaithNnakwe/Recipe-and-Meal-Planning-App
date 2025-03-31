@@ -18,7 +18,11 @@ class _RecipeDetailState extends State<RecipeDetail> {
 
   // Function to add recipe to meal plan
   void addToMealPlan() {
+     print("📌 Trying to add ${widget.recipe.name} to $selectedMeal on $selectedDay");
     widget.mealPlan.addMeal(selectedDay, selectedMeal, widget.recipe);
+    print("🔍 Updated Meal Plan:");
+    print(widget.mealPlan.meals);
+    
   setState(() {});
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("${widget.recipe.name} added to $selectedMeal on $selectedDay", style: TextStyle(color: Colors.black),),
@@ -81,8 +85,8 @@ class _RecipeDetailState extends State<RecipeDetail> {
                   setState(() {
                     selectedDay = tempSelectedDay;
                     selectedMeal = tempSelectedMeal;
+                    addToMealPlan();
                   });
-                  addToMealPlan();
                 },
                 child: Text("Add"),
               ),
