@@ -19,6 +19,8 @@ void main() {
 }
 
 class RecipeApp extends StatelessWidget {
+  const RecipeApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,6 +35,8 @@ class RecipeApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -41,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin, RestorationMixin {
   late TabController _tabController;
   final RestorableInt tabIndex = RestorableInt(0);
-  bool loggedIn = false;
 
   @override
   String get restorationId => 'recipe_tabs';
@@ -104,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen>
             Column(
               children: [
                 Text('Recipe Finder'),
-                // TODO: Added Profile Screen with Favorites
                 user.isLoggedIn
                     ? Text(
                       'Welcome, ${user.username}!',

@@ -23,32 +23,32 @@ class DatabaseHelper {
   static const columnEmail = 'email';
   static const columnPassword = 'password';
 
-  Database? _db;
-
-  static final DatabaseHelper instance = DatabaseHelper._internal();
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  static Database? _db;
 
   DatabaseHelper._internal();
 
   factory DatabaseHelper() {
-    return instance;
+    return _instance;
   }
 
-  // Getter for database
+  // Ensure a valid database instance
   Future<Database> get database async {
     if (_db != null) return _db!;
-    return await _initDatabase();
+    _db = await _initDatabase();
+    return _db!;
   }
 
   // Initialize the database
   Future<Database> _initDatabase() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, _databaseName);
-    _db = await openDatabase(
+
+    return await openDatabase(
       path,
       version: _databaseVersion,
       onCreate: _onCreate,
     );
-    return _db!;
   }
 
   // Create tables
@@ -98,7 +98,7 @@ class DatabaseHelper {
     return await db.insert(favoriteRecipesTable, recipe);
   }
 
-  // Get favorite recipes by user
+  // Get favorite recipes by user id
   Future<List<Map<String, dynamic>>> getFavoriteRecipes(int userId) async {
     final db = await database;
     return await db.query(
@@ -108,13 +108,22 @@ class DatabaseHelper {
     );
   }
 
-  // Delete favorite recipe by ID
-  Future<int> deleteFavorite(int id) async {
+  // Delete favorite recipe by recipe id
+  Future<int> deleteFavorite(String name) async {
     final db = await database;
     return await db.delete(
       favoriteRecipesTable,
-      where: '$columnId = ?',
-      whereArgs: [id],
+      where: '$columnTitle = ?',
+      whereArgs: [name],
     );
+  }
+
+  // Close the database to prevent memory leaks
+  Future<void> closeDatabase() async {
+    final db = _db;
+    if (db != null) {
+      await db.close();
+      _db = null;
+    }
   }
 }

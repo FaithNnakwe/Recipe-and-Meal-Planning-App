@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'detail.dart';
+import 'login.dart';
 import 'recipe.dart';
+import 'user_provider.dart';
 
 class RecipeList extends StatefulWidget {
+  const RecipeList({super.key});
+
   @override
   _RecipeListState createState() => _RecipeListState();
 }
@@ -23,11 +28,11 @@ class _RecipeListState extends State<RecipeList> {
 
   @override
   Widget build(BuildContext context) {
-    var filteredRecipes = recipes;
+    var userProvider = Provider.of<UserProvider>(context);
 
-    if (selectedFilter != 'All') {
-      filteredRecipes =
-          recipes.where((recipe) {
+    var filteredRecipes =
+        recipes.where((recipe) {
+          if (selectedFilter != 'All') {
             switch (selectedFilter) {
               case 'Vegan':
                 return recipe.isVegan;
@@ -38,8 +43,9 @@ class _RecipeListState extends State<RecipeList> {
               default:
                 return true;
             }
-          }).toList();
-    }
+          }
+          return true;
+        }).toList();
 
     if (searchQuery.isNotEmpty) {
       filteredRecipes =
@@ -55,9 +61,12 @@ class _RecipeListState extends State<RecipeList> {
     return Scaffold(
       backgroundColor: Color(0xFFD0E1F9),
       appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(56.0),
-          child: Padding(
+        title: Text('Recipe List', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Column(
+        children: [
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: TextField(
               controller: searchController,
@@ -72,108 +81,171 @@ class _RecipeListState extends State<RecipeList> {
                 fillColor: Colors.white,
               ),
               onChanged: (query) {
-                setState(() {
-                  searchQuery = query;
-                });
+                setState(() => searchQuery = query);
               },
             ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children:
                     filters.map((String filter) {
-                      return FilterChip(
-                        label: Text(filter),
-                        selected: selectedFilter == filter,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            selectedFilter = selected ? filter : 'All';
-                          });
-                        },
-                        selectedColor: Colors.blueAccent,
-                        backgroundColor: Color(0xFFF5E6C4),
-                        labelStyle: TextStyle(
-                          color:
-                              selectedFilter == filter
-                                  ? Colors.white
-                                  : Colors.black,
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.0),
+                        child: FilterChip(
+                          label: Text(filter),
+                          selected: selectedFilter == filter,
+                          onSelected: (bool selected) {
+                            setState(
+                              () => selectedFilter = selected ? filter : 'All',
+                            );
+                          },
+                          selectedColor: Colors.blueAccent,
+                          backgroundColor: Color(0xFFF5E6C4),
+                          labelStyle: TextStyle(
+                            color:
+                                selectedFilter == filter
+                                    ? Colors.white
+                                    : Colors.black,
+                          ),
                         ),
                       );
                     }).toList(),
               ),
             ),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+          ),
+          Expanded(
+            child: GridView.builder(
               padding: EdgeInsets.all(8.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                childAspectRatio: 0.7,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.7,
               ),
               itemCount: filteredRecipes.length,
               itemBuilder: (context, index) {
                 final recipe = filteredRecipes[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RecipeDetail(recipe: recipe),
+                return _buildRecipeCard(context, recipe, userProvider);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecipeCard(
+    BuildContext context,
+    Recipe recipe,
+    UserProvider userProvider,
+  ) {
+    bool isFavorite = userProvider.favoriteRecipes.any(
+      (fav) => fav['title'] == recipe.name,
+    );
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RecipeDetail(recipe: recipe)),
+        );
+      },
+      child: Card(
+        color: Color(0xFFF9D6E1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    recipe.imageUrl,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                recipe.name,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 4),
+              Text(
+                '${recipe.ingredients.length} Ingredients',
+                style: TextStyle(fontSize: 12, color: Colors.black54),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 4),
+
+              // Favorites Button
+              if (!userProvider.isLoggedIn)
+                IconButton(
+                  icon: Icon(
+                    Icons.favorite_border,
+                    size: 20,
+                    color: Colors.black54,
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please log in to add favorites'),
+                        action: SnackBarAction(
+                          label: 'Log In',
+                          onPressed: () {
+                            // Navigate to the Login screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     );
                   },
-                  child: Card(
-                    color: Color(0xFFF9D6E1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              recipe.imageUrl,
-                              width: 60,
-                              height: 50,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            recipe.name,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            '${recipe.ingredients.length} Ingredients',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 7),
-                        ],
-                      ),
-                    ),
+                )
+              else
+                IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    size: 20,
+                    color: isFavorite ? Colors.red : Colors.black54,
                   ),
-                );
-              },
-            ),
-          ],
+                  onPressed: () async {
+                    if (isFavorite) {
+                      await userProvider.deleteFavoriteRecipe(recipe.name);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${recipe.name} removed from favorites',
+                          ),
+                        ),
+                      );
+                    } else {
+                      await userProvider.addFavoriteRecipe(recipe.toMap());
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${recipe.name} added to favorites'),
+                        ),
+                      );
+                    }
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );

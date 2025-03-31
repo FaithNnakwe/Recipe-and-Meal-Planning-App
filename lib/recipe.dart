@@ -16,6 +16,35 @@ class Recipe {
     required this.ingredients,
     required this.steps,
   });
+
+  // Convert Recipe to Map to make database easier
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'imageUrl': imageUrl,
+      'isVegan': isVegan ? 1 : 0, // Convert bool to int for database storage
+      'isGlutenFree': isGlutenFree ? 1 : 0,
+      'isVegetarian': isVegetarian ? 1 : 0,
+      'ingredientsCount': ingredients.length,
+      'ingredients': ingredients,
+      'steps': steps,
+    };
+  }
+
+  // Factory constructor to create a Recipe from a map
+  factory Recipe.fromMap(Map<String, dynamic> map) {
+    return Recipe(
+      name: map['name'] ?? '', // Default to empty string if null
+      imageUrl: map['imageUrl'] ?? '', // Default to empty string if null
+      isVegan: map['isVegan'] == 1, // Convert from 1/0 to bool
+      isGlutenFree: map['isGlutenFree'] == 1, // Convert from 1/0 to bool
+      isVegetarian: map['isVegetarian'] == 1, // Convert from 1/0 to bool
+      ingredients: List<String>.from(
+        map['ingredients'] ?? [],
+      ), // Convert ingredients to a list of strings, default to empty if null
+      steps: List<String>.from(map['steps'] ?? []),
+    );
+  }
 }
 
 List<Recipe> recipes = [
