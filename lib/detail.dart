@@ -3,10 +3,10 @@ import 'recipe.dart';
 import 'meal_plan.dart';
 
 class RecipeDetail extends StatefulWidget {
-  final Recipe recipe;
-  final MealPlan mealPlan;
+  final Recipe recipe; // Declare recipe property
+  final MealPlan mealPlan; // Declare mealPlan property
 
-  RecipeDetail({required this.recipe, required this.mealPlan});
+  RecipeDetail({required this.recipe, required this.mealPlan}); // Initialize properties
 
   @override
   _RecipeDetailState createState() => _RecipeDetailState();
@@ -17,19 +17,16 @@ class _RecipeDetailState extends State<RecipeDetail> {
   String selectedMeal = "Breakfast";  // Default to Breakfast
 
   // Function to add recipe to meal plan
-  void addToMealPlan() {
-     print("📌 Trying to add ${widget.recipe.name} to $selectedMeal on $selectedDay");
-    widget.mealPlan.addMeal(selectedDay, selectedMeal, widget.recipe);
-    print("🔍 Updated Meal Plan:");
-    print(widget.mealPlan.meals);
-    
-  setState(() {});
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("${widget.recipe.name} added to $selectedMeal on $selectedDay", style: TextStyle(color: Colors.black),),
-       backgroundColor: Colors.white),
-    );
-    Navigator.pop(context); // Close dialog after adding the meal
-  }
+ void addToMealPlan() {
+  print("📌 Adding ${widget.recipe.name} to $selectedMeal on $selectedDay");
+  widget.mealPlan.addMeal(selectedDay, selectedMeal, widget.recipe); // Call addMeal on the instance
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("${widget.recipe.name} added to $selectedMeal on $selectedDay"),
+    ),
+  );
+  Navigator.pop(context, true); // Close the dialog
+}
 
   // Function to show the dialog for adding to meal plan
   void showMealDialog() {
@@ -82,11 +79,9 @@ class _RecipeDetailState extends State<RecipeDetail> {
               ElevatedButton(
                 onPressed: () {
                   // Update the main state variables before closing the dialog
-                  setState(() {
                     selectedDay = tempSelectedDay;
                     selectedMeal = tempSelectedMeal;
                     addToMealPlan();
-                  });
                 },
                 child: Text("Add"),
               ),

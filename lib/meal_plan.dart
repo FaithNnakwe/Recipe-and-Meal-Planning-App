@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'detail.dart';
 import 'recipe.dart';
+import 'user_provider.dart';
+import 'package:provider/provider.dart';
 
-class MealPlan {
+class MealPlan with ChangeNotifier {
   Map<String, Map<String, List<Recipe>>> meals = {
     "Monday": {"Breakfast": [], "Lunch": [], "Dinner": []},
     "Tuesday": {"Breakfast": [], "Lunch": [], "Dinner": []},
@@ -15,7 +17,7 @@ class MealPlan {
 
   void addMeal(String day, String mealType, Recipe recipe) {
     meals[day]?[mealType]?.add(recipe);
-    print("Added ${recipe.name} to $mealType on $day");
+     notifyListeners();
     
   }
 
@@ -73,6 +75,7 @@ class MealPlanScreenState extends State<MealPlanScreen> {
         });
       });
     });
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("All recipes have been removed from the meal plan", style: TextStyle(color: Colors.black),), backgroundColor: Colors.white,),
     );
@@ -81,6 +84,8 @@ class MealPlanScreenState extends State<MealPlanScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> updatedGroceryList = widget.mealPlan.generateGroceryList();
+    final userProvider = Provider.of<UserProvider>(context);
+    final mealPlan = userProvider.mealPlan;
 
     return Scaffold(
       backgroundColor: Color(0xFFF9D6E1),
@@ -107,14 +112,14 @@ class MealPlanScreenState extends State<MealPlanScreen> {
           Expanded(
             flex: 6,
             child: ListView(
-              children: widget.mealPlan.meals.keys.map((day) {
+              children: mealPlan.meals.keys.map((day) {
                 return Card(
                   margin: EdgeInsets.all(8),
                   color: Color(0xFFD3D3D3),
                   child: ExpansionTile(
                     title: Text(day, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     children: ["Breakfast", "Lunch", "Dinner"].map((mealType) {
-                      final recipes = widget.mealPlan.meals[day]?[mealType] ?? []; // Get list of recipes
+                      final recipes = mealPlan.meals[day]?[mealType] ?? []; // Get list of recipes
                       print("Recipes for $day - $mealType: ${recipes.map((r) => r.name).toList()}");
                       Color mealTextColor;
                       if (mealType == "Breakfast") {
@@ -148,11 +153,13 @@ class MealPlanScreenState extends State<MealPlanScreen> {
                                       Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                     builder: (context) => RecipeDetail(recipe: recipe, mealPlan: widget.mealPlan),
+                                     builder: (context) => RecipeDetail(recipe: recipe, mealPlan: widget.mealPlan,)
                                ),
-                              ).then((_) {
-                                 setState(() {});  // Refresh the screen after returning
-                                   });
+                              ).then((mealPlanUpdated) {
+    if (mealPlanUpdated == true) {
+      setState(() {});  // Only refresh if the meal plan was updated
+    }
+  });
                                },
                                       trailing: IconButton(
                                         icon: Icon(Icons.delete, color: Colors.red),

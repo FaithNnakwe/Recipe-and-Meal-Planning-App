@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'dbhelper.dart';
+import 'meal_plan.dart';
 
 class UserProvider with ChangeNotifier {
   String? _username;
   int? _userId;
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<Map<String, dynamic>> _favoriteRecipes = [];
+  final MealPlan _mealPlan = MealPlan();
+
+  // Add this getter
+  MealPlan get mealPlan => _mealPlan;
 
   String? get username => _username;
   int? get userId => _userId;
